@@ -6,7 +6,7 @@ Dieses Projekt stellt eine REST-API für eine einfache Verwaltung von Tasks mit 
 
 ## Installation
 
-Node.js is required to run this project.
+Es braucht Node um dieses Projekt zu starten.
 
 ```bash
   git clone https://github.com/nxtdxve/m295-Pr-fung-B
@@ -17,7 +17,7 @@ Node.js is required to run this project.
 
 #### **Authentifizierung**
 
-- **`POST /login`**: Loggt dich ein mit parameter: **`email`**, **`password`**.
+- **`POST /login`**: Loggt dich ein Erforderliche Felder: **`email`**, **`password`**.
 - **`GET /verify`**: Überprüft ob man angemeldet ist
 - **`DELETE /logout`**: Loggt dich aus der session aus.
 
