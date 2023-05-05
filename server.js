@@ -38,6 +38,7 @@ app.get('/', (req, res) => {
 // /login /verify /logout inspiriert von https://openscript.github.io/course-zli-m295/#/83?clicks=0
 app.post('/login', (req, res) => {
   const { email, password } = req.body
+  // eslint-disable-next-line no-useless-escape
   const mailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ // Regex from https://www.w3resource.com/javascript/form/email-validation.php
 
   if (!email || email === '') {
