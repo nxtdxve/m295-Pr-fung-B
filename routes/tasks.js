@@ -8,47 +8,102 @@ const tasksList = [
   {
     id: 1,
     title: 'Task 1',
-    creation_date: '2023-05-01',
-    finished_date: '2023-05-03'
+    creationDate: '2023-05-01',
+    finishedDate: '2023-05-03',
+    creator: 'admin'
   },
   {
     id: 2,
     title: 'Task 2',
-    creation_date: '2023-05-02',
-    finished_date: '2023-05-04'
+    creationDate: '2023-05-02',
+    finishedDate: '2023-05-04',
+    creator: 'admin'
   },
   {
     id: 3,
     title: 'Task 3',
-    creation_date: '2023-05-03',
-    finished_date: null
+    creationDate: '2023-05-03',
+    finishedDate: null,
+    creator: 'admin'
   },
   {
     id: 4,
     title: 'Task 4',
-    creation_date: '2023-05-04',
-    finished_date: null
+    creationDate: '2023-05-04',
+    finishedDate: null,
+    creator: 'admin'
   }
 ]
 
 router.get('/', (req, res) => {
-  res.send(tasksList)
+  return res.status(200).json(tasksList)
 })
 
 router.post('/', (req, res) => {
-  res.send('Create a TODO')
+  const { title } = req.body
+  const creationDate = new Date().toISOString().slice(0, 10)
+  let nextId = tasksList.length + 1
+  const creatorEmail = req.session.email
+
+  if (!title || title === '') {
+    return res.status(406).json({ error: 'Title is required' })
+  }
+
+  const newTask = {
+    id: nextId,
+    title,
+    creationDate,
+    finishedDate: null,
+    creator: creatorEmail
+  }
+
+  tasksList.push(newTask)
+  nextId++
+
+  return res.status(201).json(newTask)
 })
 
 router.get('/:id', (req, res) => {
-  res.send(`Get TODO ${req.params.id}`)
+  const { id } = req.params
+  const task = tasksList.find(task => task.id === parseInt(id))
+
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' })
+  } else {
+    return res.status(200).json(task)
+  }
 })
 
 router.put('/:id', (req, res) => {
-  res.send(`Update TODO ${req.params.id}`)
+  const { id } = req.params
+  const { title, finishedDate } = req.body
+  const task = tasksList.find(task => task.id === parseInt(id)) // Inspiriert von eigenen Aufgaben: https://github.com/nxtdxve/m295-233131
+
+  if (!task) {
+    return res.status(404).json({ error: 'Task not found' })
+  }
+
+  if (!title || title === '') {
+    return res.status(406).json({ error: 'Title is required' })
+  }
+
+  task.title = title
+  task.finishedDate = finishedDate
+
+  return res.status(200).json(task)
 })
 
 router.delete('/:id', (req, res) => {
-  res.send(`Delete TODO ${req.params.id}`)
+  const { id } = req.params
+  const taskIndex = tasksList.findIndex(task => task.id === parseInt(id)) // https://github.com/nxtdxve/m295-233131
+
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: 'Task not found' })
+  } else {
+    const deletedTask = tasksList.splice(taskIndex, 1)
+
+    return res.status(204).send(deletedTask)
+  }
 })
 
 export default router
